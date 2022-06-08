@@ -1,0 +1,16 @@
+{
+	"data":[
+		{
+			"city_name":"Morrisville",
+			"state_code":"NC",
+			"country_code":"US",
+			"temp":88.4,
+			"app_temp":91.7,
+			"rh":50,
+			"weather":{
+				"description":"Clear sky"
+			}
+		}
+	],
+	"count":1
+}
