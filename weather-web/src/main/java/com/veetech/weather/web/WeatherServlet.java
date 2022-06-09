@@ -15,22 +15,46 @@
  */
 package com.veetech.weather.web;
 
+import com.veetech.weather.WeatherService;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
+//import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+
+import static com.veetech.weather.WeatherbitIO.Units;
+import java.util.Locale;
+import org.json.simple.parser.ParseException;
+
 
 /**
  *
  * @author pendracon
  */
-@WebServlet(name = "WeatherServlet", urlPatterns = {"/WeatherServlet"})
+//@WebServlet(name = "WeatherServlet", urlPatterns = {"/WeatherServlet"})
 public class WeatherServlet
 		extends HttpServlet
 {
+	/**
+	 * Initializes a new instance of WeatherServlet with the API key for the
+	 * downstream query service.
+	 * 
+	 * @throws ServletException
+	 */
+	public void init()
+			throws ServletException
+	{
+		apiKey = getInitParameter( "apiKey" );
+		if( apiKey == null || apiKey.length() == 0 ) {
+			throw new ServletException( "Downstream service API key not defined!" );
+		}
+	}
+	
 	/**
 	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
 	 * methods.
@@ -44,6 +68,21 @@ public class WeatherServlet
 			throws ServletException, IOException
 	{
 		response.setContentType("text/html;charset=UTF-8");
+
+		String postalCode = request.getParameter( "postalCode" );
+		Units units = Units.IMPERIAL;
+		
+		String unitsType = request.getParameter( "unitsType" );
+		if (unitsType != null) {
+			try {
+				units = Units.valueOf( unitsType.toUpperCase(Locale.getDefault()) );
+			}
+			catch (IllegalArgumentException e) {
+				if (log.isDebugEnabled()) {
+					log.debug( String.format("Invalid units type specified: '%s' - using %s.", unitsType, units.name()) );
+				}
+			}
+		}
 		
 		try (PrintWriter out = response.getWriter()) {
 			out.println("<!DOCTYPE html>");
@@ -52,9 +91,14 @@ public class WeatherServlet
 			out.println("<title>Weather App Front-end</title>");			
 			out.println("</head>");
 			out.println("<body>");
-			out.println("<h2>Weather App at " + request.getContextPath() + "</h2>");
+			out.println("<h2>Weather App</h2>");
+			out.println( String.format("<p>Current forecast for postal code %s in %s units:", postalCode, units.name().toLowerCase(Locale.getDefault())) );
+			out.println( String.format("<p>%s", WeatherService.getForecast(apiKey, postalCode, units).replaceAll("\n", "<br>")) );
 			out.println("</body>");
 			out.println("</html>");
+		}
+		catch (ParseException e) {
+			throw new ServletException( "Error parsing forecast results.", e );
 		}
 	}
 
@@ -97,4 +141,7 @@ public class WeatherServlet
 		return "Weather App Front-end";
 	}// </editor-fold>
 
+	private String apiKey;
+	
+	private static final Logger log = Logger.getLogger(WeatherServlet.class);
 }

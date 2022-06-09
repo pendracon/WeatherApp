@@ -4,4 +4,25 @@
 
 <web-app>
 	<display-name>Weather App Front-end</display-name>
+	<description>
+		A simplistic web application for displaying basic weather forecasts by
+		postal code.
+	</description>
+	
+	<servlet>
+		<servlet-name>WeatherServlet</servlet-name>
+		<display-name>WeatherServlet</display-name>
+		<description>Retrieves and displays weather forecast by postal code.</description>
+		<servlet-class>com.veetech.weather.web.WeatherServlet</servlet-class>
+		
+		<init-param>
+			<param-name>apiKey</param-name>
+			<param-value>ec8f64f83fda49b98b10217f2268a318</param-value>
+		</init-param>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>WeatherServlet</servlet-name>
+		<url-pattern>/forecast</url-pattern>
+	</servlet-mapping>
 </web-app>

@@ -68,13 +68,8 @@ public class Main
 	private static void printWeatherInfo( String key, String zip, Units units )
 			throws IOException, ParseException
 	{
-		WeatherbitIO weather = new WeatherbitIO( key );
-		weather.setUnits( units );
-		
-		Weather info = new WeatherbitParser().parse( weather.forPostalCode(zip) );
-		
 		if (log.isInfoEnabled()) {
-			log.info( String.format("%n%s", new WeatherFormatter().format(info)) );
+			log.info( WeatherService.getForecast(key, zip, units) );
 		}
 	}
 
