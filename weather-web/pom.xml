@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>com.veetechis</groupId>
 		<artifactId>weather-app</artifactId>
-		<version>${revision}</version>
+		<version>1.0</version>
 	</parent>
 	
 	<artifactId>weather-web</artifactId>
@@ -18,6 +18,11 @@
 	<description>A simple front-end for weather forecast query tool.</description>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.veetechis</groupId>
+			<artifactId>weather</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-web-api</artifactId>

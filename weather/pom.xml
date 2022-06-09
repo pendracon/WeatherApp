@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>com.veetechis</groupId>
 		<artifactId>weather-app</artifactId>
-		<version>${revision}</version>
+		<version>1.0</version>
 	</parent>
 	
 	<artifactId>weather</artifactId>
