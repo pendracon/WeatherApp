@@ -12,6 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * --------------------------------
+ * Based on example code from:
+ *   Maven by Example (books.sonatype.com/mvnex-book)
  */
 package com.veetech.weather.web;
 
@@ -46,6 +50,7 @@ public class WeatherServlet
 	 * 
 	 * @throws ServletException
 	 */
+	@Override
 	public void init()
 			throws ServletException
 	{
@@ -67,7 +72,7 @@ public class WeatherServlet
 	protected void processRequest( HttpServletRequest request, HttpServletResponse response )
 			throws ServletException, IOException
 	{
-		response.setContentType("text/html;charset=UTF-8");
+		response.setContentType( "text/html;charset=UTF-8" );
 
 		String postalCode = request.getParameter( "postalCode" );
 		Units units = Units.IMPERIAL;
@@ -78,8 +83,8 @@ public class WeatherServlet
 				units = Units.valueOf( unitsType.toUpperCase(Locale.getDefault()) );
 			}
 			catch (IllegalArgumentException e) {
-				if (log.isDebugEnabled()) {
-					log.debug( String.format("Invalid units type specified: '%s' - using %s.", unitsType, units.name()) );
+				if (LOG.isDebugEnabled()) {
+					LOG.debug( String.format("Invalid units type specified: '%s' - using %s.", unitsType, units.name()) );
 				}
 			}
 		}
@@ -93,7 +98,7 @@ public class WeatherServlet
 			out.println("<body>");
 			out.println("<h2>Weather App</h2>");
 			out.println( String.format("<p>Current forecast for postal code %s in %s units:", postalCode, units.name().toLowerCase(Locale.getDefault())) );
-			out.println( String.format("<p>%s", WeatherService.getForecast(apiKey, postalCode, units).replaceAll("\n", "<br>")) );
+			out.println( String.format("<p>%s", WeatherService.format(WeatherService.getForecast(apiKey, postalCode, units)).replaceAll("\n", "<br>")) );
 			out.println("</body>");
 			out.println("</html>");
 		}
@@ -141,7 +146,8 @@ public class WeatherServlet
 		return "Weather App Front-end";
 	}// </editor-fold>
 
+
 	private String apiKey;
 	
-	private static final Logger log = Logger.getLogger(WeatherServlet.class);
+	private static final Logger LOG = Logger.getLogger( WeatherServlet.class );
 }

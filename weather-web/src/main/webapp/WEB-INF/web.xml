@@ -17,7 +17,7 @@
 		
 		<init-param>
 			<param-name>apiKey</param-name>
-			<param-value>ec8f64f83fda49b98b10217f2268a318</param-value>
+			<param-value>{weatherbit}</param-value>
 		</init-param>
 	</servlet>
 	

@@ -12,6 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * --------------------------------
+ * Based on example code from:
+ *   Maven by Example (books.sonatype.com/mvnex-book)
  */
 package com.veetech.weather;
 
@@ -20,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -44,47 +49,36 @@ public class WeatherbitIO
 		private final String typeCode;
 	}
 	
-	public static final String WEATHER_URL_TMPL = "http://api.weatherbit.io/v2.0/current?key=@apiKey@&units=@units@&postal_code=@postalCode@&country=@countryCode@";
-
 	
 	public WeatherbitIO( String apiKey )
 	{
-		apiData = new Properties();
-		apiData.setProperty( API_KEY_PARM, apiKey );
-		apiData.setProperty( UNITS_PARM, Units.METRIC.name() );
+		this.apiKey = apiKey;
 	}
 
 	
 	public String getAPIKey()
 	{
-		return apiData.getProperty( API_KEY_PARM );
+		return apiKey;
 	}
 	
-	public void setUnits( Units units )
-	{
-		apiData.setProperty( UNITS_PARM, units.name() );
-	}
-	
-	public Units getUnits()
-	{
-		return Units.valueOf( apiData.getProperty(UNITS_PARM) );
-	}
-	
-	public InputStream forPostalCode( String postalCode )
+	public InputStream forPostalCode( String postalCode, Units units )
 			throws IOException
 	{
-		return forPostalCode( postalCode, "US" );
+		return forPostalCode( postalCode, "US", units );
 	}
 	
-	public InputStream forPostalCode( String postalCode, String countryCode )
+	public InputStream forPostalCode( String postalCode, String countryCode, Units units )
 			throws IOException
 	{
-		if (log.isInfoEnabled()) {
-			log.info(String.format("Retrieving weather data for %s postal code %s...", countryCode, postalCode) );
+		if (LOG.isInfoEnabled()) {
+			LOG.info(String.format("Retrieving weather data for %s postal code %s...", countryCode, postalCode) );
 		}
 
-		apiData.setProperty( POSTAL_CODE_PARM, postalCode );
-		apiData.setProperty( COUNTRY_CODE_PARM, countryCode );
+		Properties apiData = new Properties();
+		apiData.setProperty( API_KEY_PARM, getAPIKey() );
+		apiData.setProperty( POSTAL_CODE_PARM, (postalCode == null ? "12345" : postalCode) );
+		apiData.setProperty( COUNTRY_CODE_PARM, (countryCode == null ? "US" : countryCode.toUpperCase(Locale.getDefault())) );
+		apiData.setProperty( UNITS_PARM, (units == null ? Units.METRIC.name() : units.name()) );
 		
 		String url = TemplateFormat.textFormat( WEATHER_URL_TMPL, apiData );
 		URLConnection conn = new URL(url).openConnection();
@@ -97,7 +91,9 @@ public class WeatherbitIO
 	protected static final String POSTAL_CODE_PARM = "@postalCode@";
 	protected static final String COUNTRY_CODE_PARM = "@countryCode@";
 	
-	private final Properties apiData;
+	protected static final String WEATHER_URL_TMPL = "http://api.weatherbit.io/v2.0/current?key=@apiKey@&units=@units@&postal_code=@postalCode@&country=@countryCode@";
 
-	private static final Logger log = Logger.getLogger(WeatherbitIO.class);
+	private final String apiKey;
+
+	private static final Logger LOG = Logger.getLogger( WeatherbitIO.class );
 }

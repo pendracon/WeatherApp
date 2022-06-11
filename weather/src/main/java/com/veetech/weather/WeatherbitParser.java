@@ -12,6 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * --------------------------------
+ * Based on example code from:
+ *   Maven by Example (books.sonatype.com/mvnex-book)
  */
 package com.veetech.weather;
 
@@ -32,16 +36,16 @@ public class WeatherbitParser
 	{
 		Weather weather = new Weather();
 	
-		if (log.isInfoEnabled()) {
-			log.info( "Parsing JSON stream..." );
+		if (LOG.isInfoEnabled()) {
+			LOG.info( "Parsing JSON stream..." );
 		}
-		JSONObject doc = (JSONObject) parser.parse( new InputStreamReader(is) );
+		JSONObject doc = (JSONObject) PARSER.parse( new InputStreamReader(is) );
 		
-		if (log.isDebugEnabled()) {
-			log.debug( String.format("Loading weather info:%n%s", doc) );
+		if (LOG.isDebugEnabled()) {
+			LOG.debug( String.format("Loading weather info:%n%s", doc) );
 		}
-		else if (log.isInfoEnabled()) {
-			log.info( "Loading weather info..." );
+		else if (LOG.isInfoEnabled()) {
+			LOG.info( "Loading weather info..." );
 		}
 		JSONObject data = (JSONObject) ((JSONArray)doc.get("data")).get( 0 );
 		weather.setCity( String.valueOf(data.get("city_name")) );
@@ -56,6 +60,6 @@ public class WeatherbitParser
 	}
 
 	
-	private static final JSONParser parser = new JSONParser();
-	private static final Logger log = Logger.getLogger(WeatherbitParser.class);
+	private static final JSONParser PARSER = new JSONParser();
+	private static final Logger LOG = Logger.getLogger(WeatherbitParser.class);
 }

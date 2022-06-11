@@ -12,6 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * --------------------------------
+ * Based on example code from:
+ *   Maven by Example (books.sonatype.com/mvnex-book)
  */
 package com.veetech.weather;
 

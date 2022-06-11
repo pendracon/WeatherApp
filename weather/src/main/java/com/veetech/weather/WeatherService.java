@@ -12,6 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * --------------------------------
+ * Based on example code from:
+ *   Maven by Example (books.sonatype.com/mvnex-book)
  */
 package com.veetech.weather;
 
@@ -19,21 +23,30 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.json.simple.parser.ParseException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Service;
 
+@Service
 public class WeatherService
 {
-	public static String getForecast( String key, String zip, WeatherbitIO.Units units )
+	public static Weather getForecast( String key, String zip, WeatherbitIO.Units units )
 			throws IOException, ParseException
 	{
-		WeatherbitIO weather = new WeatherbitIO( key );
-		weather.setUnits( units );
-		
-		Weather info = new WeatherbitParser().parse( weather.forPostalCode(zip) );
-		
-		return String.format( "%n%s", new WeatherFormatter().format(info) );
+		WeatherbitIO weather = CONTEXT.getBean( WeatherbitIO.class, key );
+		return CONTEXT.getBean( WeatherbitParser.class ).parse( weather.forPostalCode(zip, units) );
 	}
 
-	private WeatherService() {}
+	public static String format( Weather weather )
+			throws IOException
+	{
+		return CONTEXT.getBean( WeatherFormatter.class ).format( weather );
+	}
 	
-	private static final Logger log = Logger.getLogger(WeatherService.class);
+	
+	private WeatherService() {}
+
+	
+	private static final ApplicationContext CONTEXT = new AnnotationConfigApplicationContext( WeatherConfig.class );
+	private static final Logger LOG = Logger.getLogger( WeatherService.class );
 }
