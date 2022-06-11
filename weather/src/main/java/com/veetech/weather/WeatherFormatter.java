@@ -12,6 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * --------------------------------
+ * Based on example code from:
+ *   Maven by Example (books.sonatype.com/mvnex-book)
  */
 package com.veetech.weather;
 
@@ -29,8 +33,8 @@ public class WeatherFormatter
 	public String format( Weather weather )
 			throws IOException
 	{
-		if (log.isInfoEnabled()) {
-			log.info( "Formatting weather data..." );
+		if (LOG.isInfoEnabled()) {
+			LOG.info( "Formatting weather data..." );
 		}
 		
 		Reader reader = new InputStreamReader( getClass().getClassLoader().getResourceAsStream("output.vm") );
@@ -43,5 +47,5 @@ public class WeatherFormatter
 	}
 
 	
-	private static final Logger log = Logger.getLogger(WeatherFormatter.class);
+	private static final Logger LOG = Logger.getLogger( WeatherFormatter.class );
 }

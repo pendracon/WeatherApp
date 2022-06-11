@@ -12,6 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * --------------------------------
+ * Based on example code from:
+ *   Maven by Example (books.sonatype.com/mvnex-book)
  */
 package com.veetech.weather;
 
@@ -23,6 +27,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.json.simple.parser.ParseException;
 
 import static com.veetech.weather.WeatherbitIO.Units;
+
 
 /**
  *
@@ -68,14 +73,14 @@ public class Main
 	private static void printWeatherInfo( String key, String zip, Units units )
 			throws IOException, ParseException
 	{
-		if (log.isInfoEnabled()) {
-			log.info( WeatherService.getForecast(key, zip, units) );
+		if (LOG.isInfoEnabled()) {
+			LOG.info( String.format("%n%s", WeatherService.format(WeatherService.getForecast(key, zip, units))) );
 		}
 	}
 
 	private static void usage()
 	{
-		log.error( String.format("%nUsage:%n"
+		LOG.error( String.format("%nUsage:%n"
 				+ "\t--key=<apiKey>*%n"
 				+ "\t      specify Weatherbit.IO user API key%n"
 				+ "\t--zip=<ZIP code>*%n"
@@ -92,5 +97,5 @@ public class Main
 	}
 
 	
-	private static final Logger log = Logger.getLogger(Main.class);
+	private static final Logger LOG = Logger.getLogger( Main.class );
 }
